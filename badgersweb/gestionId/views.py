@@ -6,7 +6,7 @@ import datetime
 from datetime import datetime as dt
 import time
 from time import sleep
-
+from .models import User
 
 from django.http import HttpResponseRedirect
 from .forms import UserForm
@@ -53,7 +53,7 @@ def gestionId(request):
 
     else:
         form = UserForm()
-    return render(request,"gestionID/gererId.html",{'form': form})
+    return render(request,"gestionId/gererId.html",{'form': form})
 
     
 
@@ -63,9 +63,21 @@ def gestionIdRequete(request):
             nom = form.cleaned_data['nom']
             prenom = form.cleaned_data["prenom"]
             rfid = form.cleaned_data["rfid"]
+            User.objects.create(
+                nom=nom,
+                prenom= prenom,
+                rfid = rfid
+                )
         client = mqtt.Client()
         client.username_pw_set(username="fx4431@gmail.com",password="badger")
         client.on_connect = on_connect
         client.connect("maqiatto.com", 1883, 60)
         client.publish('fx4431@gmail.com/testSite',(str(nom)))
         return HttpResponseRedirect("/gererId")
+    
+    
+def statistiques(request):
+    utilisateurs = User.objects.all()
+    
+    context ={"utilisateurs":utilisateurs}
+    return render(request,"gestionId/statistiques.html",context)

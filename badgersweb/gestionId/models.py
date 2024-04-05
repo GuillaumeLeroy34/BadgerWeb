@@ -5,5 +5,7 @@ class User(models.Model):
     rfid = models.CharField(max_length=100)
     nom = models.CharField(max_length=50)
     prenom = models.CharField(max_length=50)
-    nombrePassage = models.IntegerField()
-    estAutorise = models.BooleanField()
+    nombrePassage = models.IntegerField(default=0)
+    estAutorise = models.BooleanField(default=False)
+    def __str__(self): #définit ce qui va être affiché dans la console admin développeur
+        return f"{self.prenom} {self.nom}"
