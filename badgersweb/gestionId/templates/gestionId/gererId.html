@@ -1,0 +1,9 @@
+<h1>gérer les ID:</h1>
+<a href="ligma">retour</a>
+<h2>ajouter un utilisateur</h2>
+<div>
+  <form action="gestionIdRequete" method="POST">
+    {% csrf_token %} {{form}}
+    <button type="submit">soumettre</button>
+  </form>
+</div>
