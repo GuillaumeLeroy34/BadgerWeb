@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
 import paho.mqtt.client as mqtt
@@ -7,7 +7,7 @@ from datetime import datetime as dt
 import time
 from time import sleep
 from .models import User
-
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from .forms import UserForm
 
@@ -74,8 +74,16 @@ def gestionIdRequete(request):
         client.connect("maqiatto.com", 1883, 60)
         client.publish('fx4431@gmail.com/testSite',(str(nom)))
         return HttpResponseRedirect("/gererId")
-    
-    
+
+@csrf_exempt
+def supprUser(request,id):
+    if request.method == 'POST':
+            usersuppr = get_object_or_404(User,id=id)
+            usersuppr.delete()
+            return redirect("statistiques")
+
+
+
 def statistiques(request):
     utilisateurs = User.objects.all()
     

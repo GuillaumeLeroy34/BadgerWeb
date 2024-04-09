@@ -8,6 +8,7 @@
         <th>prenom</th>
         <th>rfid</th>
         <th>nombre de passages</th>
+        <th>suppression</th>
       </tr>
     </thead>
     <tbody>
@@ -17,6 +18,9 @@
           <td>{{utilisateur.prenom}}</td>
           <td>{{utilisateur.rfid}}</td>
           <td>{{utilisateur.nombrePassage}}</td>
+          <td><form method="post" action="{% url 'supprimer_user' utilisateur.id %}">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('vous êtes sûr de vouloir supprimer cet utilisateur ?')">supprimer</button></form></td>
         </tr>
         {%endfor%}
     </tbody>
