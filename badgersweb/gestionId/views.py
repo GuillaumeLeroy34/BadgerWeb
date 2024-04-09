@@ -14,6 +14,12 @@ from .forms import UserForm
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
 
+
+def index(request):
+    context = {}
+    return render(request,"gestionId/index.html",context)
+
+
 def reponse(valeurReponse):
     client = mqtt.Client()
     client.username_pw_set(username="fx4431@gmail.com",password="badger")
@@ -35,10 +41,6 @@ def on_message(client, userdata, msg):
             reponse(0)
             t=round(time.time())
 
-def test(request):
-    context = {}
-    return render(request, "gestionId/index.html", context)
-
 def gestionId(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -55,8 +57,8 @@ def gestionId(request):
         form = UserForm()
     return render(request,"gestionId/gererId.html",{'form': form})
 
-    
 
+        
 def gestionIdRequete(request):
         form = UserForm(request.POST)
         if form.is_valid():
@@ -72,8 +74,16 @@ def gestionIdRequete(request):
         client.username_pw_set(username="fx4431@gmail.com",password="badger")
         client.on_connect = on_connect
         client.connect("maqiatto.com", 1883, 60)
-        client.publish('fx4431@gmail.com/testSite',(str(nom)))
+        client.publish('fx4431@gmail.com/testSite',(str(rfid)))
         return HttpResponseRedirect("/gererId")
+
+@csrf_exempt
+def changementAutorisation(request,id):
+    if request.method== "POST":
+        user = get_object_or_404(User,id=id)
+        user.estAutorise ^= True
+        user.save()
+    return redirect("statistiques")
 
 @csrf_exempt
 def supprUser(request,id):

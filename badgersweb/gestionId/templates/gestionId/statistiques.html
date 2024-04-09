@@ -1,4 +1,4 @@
-<h1>statistiques</h1>
+<h1>Gestion</h1>
 <a href="..">retour</a>
 
 <table>
@@ -8,6 +8,7 @@
         <th>prenom</th>
         <th>rfid</th>
         <th>nombre de passages</th>
+        <th>est autorisé</th>
         <th>suppression</th>
       </tr>
     </thead>
@@ -18,6 +19,12 @@
           <td>{{utilisateur.prenom}}</td>
           <td>{{utilisateur.rfid}}</td>
           <td>{{utilisateur.nombrePassage}}</td>
+          <td><form action="{% url 'changement_autorisation' utilisateur.id %}" method="post">
+            {% csrf_token %}
+            <input onchange=this.form.submit() type="checkbox" name="is_permitted" id="is_permitted" value="{{user.estAutorise}}"
+            {% if utilisateur.estAutorise%} checked {% endif %}>
+            
+          </form></td>
           <td><form method="post" action="{% url 'supprimer_user' utilisateur.id %}">
             {% csrf_token %}
             <button type="submit" onclick="return confirm('vous êtes sûr de vouloir supprimer cet utilisateur ?')">supprimer</button></form></td>
