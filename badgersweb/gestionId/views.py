@@ -96,6 +96,6 @@ def supprUser(request,id):
 
 def statistiques(request):
     utilisateurs = User.objects.all()
-    
-    context ={"utilisateurs":utilisateurs}
+    autorisation = 0
+    context ={"utilisateurs":utilisateurs, "autorisation":autorisation}
     return render(request,"gestionId/statistiques.html",context)

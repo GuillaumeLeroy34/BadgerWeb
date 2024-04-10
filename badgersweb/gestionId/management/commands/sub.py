@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-            client.subscribe("fx4431@gmail.com/testSite")
+            client.subscribe("fx4431@gmail.com/RFID")
 
         def reponse(valeurReponse):
             client = mqtt.Client()
@@ -30,16 +30,21 @@ class Command(BaseCommand):
             
     # The callback for when the client receives a CONNACK response from the server.
         def on_message(client, userdata, msg):
-            print(str(msg.payload.hex()))
-            print(int(msg.payload))
-            rfid=msg.payload
+            print(str(msg.payload))
+            rfidPayload=msg.payload.hex()
             try:
-                user = User.objects.get(rfid=1)
-                user.nombrePassage +=1
-                user.save()
-                self.stdout.write(self.style.SUCCESS("Mise à jour réussie"))
+                user = User.objects.get(rfid=rfidPayload)
+                if user.estAutorise:
+                    user.nombrePassage +=1
+                    user.save()
+                    self.stdout.write(self.style.SUCCESS("Mise à jour réussie"))
+                    reponse(1)
+                else:
+                    self.stdout.write(self.style.WARNING("L'utilisateur n'est pas autorisé à entrer"))
+                    reponse(0)
             except User.DoesNotExist:
-                self.stdout.write(self.style.ERROR("Utilisateur introuvable avec le rfid:{}".format(id)))
+                self.stdout.write(self.style.ERROR("Utilisateur introuvable avec le rfid:{}".format(rfidPayload)))
+                reponse(0)
         
         
         
